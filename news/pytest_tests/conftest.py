@@ -5,6 +5,7 @@ import pytest
 from django.conf import settings
 from django.test.client import Client
 from django.utils import timezone
+from django.urls import reverse
 
 from news.models import Comment, News
 
@@ -48,6 +49,10 @@ def news():
 def id_for_args(news):
     return (news.id,)
 
+@pytest.fixture
+def news_url(news):
+    return reverse('news:detail', args=(news.id,))
+
 
 @pytest.fixture
 def bulk_news():
@@ -72,6 +77,25 @@ def comment(author, news):
         text='Текст новости',
     )
     return comment
+
+@pytest.fixture
+def edit_url(comment):
+    return reverse('news:edit', args=(comment.id,))
+
+
+@pytest.fixture
+def delete_url(comment):
+    return reverse('news:delete', args=(comment.id,))
+
+
+@pytest.fixture
+def comments_url(news_url):
+    return news_url + '#comments'
+
+
+@pytest.fixture
+def comment_form_data():
+    return {'text': 'Текст комментария'}
 
 
 @pytest.fixture

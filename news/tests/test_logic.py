@@ -106,7 +106,7 @@ class TestCommentEditDelete(TestCase):
         # URL для редактирования комментария.
         cls.edit_url = reverse('news:edit', args=(cls.comment.id,)) 
         # URL для удаления комментария.
-        cls.delete_url = reverse('news:delete', args=(cls.comment.id,))  
+        cls.delete_url = reverse('news:delete', args=(cls.comment.id,))
         # Формируем данные для POST-запроса по обновлению комментария.
         cls.form_data = {'text': cls.NEW_COMMENT_TEXT}
 
