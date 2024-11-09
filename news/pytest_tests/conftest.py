@@ -1,6 +1,10 @@
+from datetime import datetime, timedelta
+
 import pytest
 
+from django.conf import settings
 from django.test.client import Client
+from django.utils import timezone
 
 from news.models import Comment, News
 
@@ -46,6 +50,21 @@ def id_for_args(news):
 
 
 @pytest.fixture
+def bulk_news():
+    today = datetime.today()
+    all_news = [
+        News(
+            title=f'Новость {index}',
+            text='Просто текст.',
+            date=today - timedelta(days=index)
+        )
+        for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
+    ]
+    News.objects.bulk_create(all_news)
+    return all_news
+
+
+@pytest.fixture
 def comment(author, news):
     comment = Comment.objects.create(
         news=news,
@@ -53,3 +72,20 @@ def comment(author, news):
         text='Текст новости',
     )
     return comment
+
+
+@pytest.fixture
+def bulk_comment(author, news):
+    now = timezone.now()
+    # Создаём комментарии в цикле.
+    for index in range(10):
+        # Создаём объект и записываем его в переменную.
+        comment = Comment.objects.create(
+            news=news,
+            author=author,
+            text=f'Текст {index}',
+        )
+        # Сразу после создания меняем время создания комментария.
+        comment.created = now + timedelta(days=index)
+        # И сохраняем эти изменения.
+        comment.save()
