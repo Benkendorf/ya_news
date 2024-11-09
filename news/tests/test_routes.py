@@ -35,7 +35,7 @@ class TestRoutes(TestCase):
                 url = reverse(name, args=args)
                 response = self.client.get(url)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
-    
+
     def test_availability_for_comment_edit_and_delete(self):
         users_statuses = (
             (self.author, HTTPStatus.OK),
